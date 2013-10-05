@@ -64,6 +64,32 @@ public class ItemList implements Comparator<ItemList>{
 		
 	}
 	
+	
+	
+	public void addItem(String item, int itemPos)
+	{
+		addItem(item);
+		addItem(itemPos);
+	}
+	
+	public void addItem(String item)
+	{
+		if(this.item == null) //No item in this object yet
+		{
+			setItem(item);
+		}
+		else if(this.item != null && joinString.length() == 0)
+		{
+			joinString.append(this.item);
+			setItem(item);
+		}
+		else //There is already one item
+		{
+			joinString.append(", " + this.item);
+			setItem(item);
+		}
+	}
+	
 	public void addItem(int itemPos)
 	{
 		this.itemsNumber  = this.itemsNumber | (int)Math.pow(2, itemPos); 
