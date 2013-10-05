@@ -4,14 +4,70 @@ import java.util.Comparator;
 
 public class ItemList implements Comparator<ItemList>{
 
-	@Override
-	public int compare(ItemList arg0, ItemList arg1) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	//This class will take an item string and return the binary representation of it
+	private StringBuffer joinString;
+	private String item;
+	private Long itemsNumber;
 	
-	//method should take the LinkedList as an argument
-	//Also needs to get the position map
+	public ItemList()
+	{
+		joinString = new StringBuffer();
+		item = null;
+		itemsNumber = 0L;
+	}
+	
+	public StringBuffer getJoinString() {
+		return joinString;
+	}
+
+	public void setJoinString(StringBuffer joinString) {
+		this.joinString = joinString;
+	}
+
+	public String getItem() {
+		return item;
+	}
+
+	public void setItem(String item) {
+		this.item = item;
+	}
+
+	public Long getItemsNumber() {
+		return itemsNumber;
+	}
+
+	public void setItemsNumber(Long itemsNumber) {
+		this.itemsNumber = itemsNumber;
+	}
+
+	@Override
+	public int compare(ItemList a, ItemList b) {
+		if(a.getJoinString().length() == 0 && b.getJoinString().length() == 0)
+		{
+			return a.getItem().compareToIgnoreCase(b.getItem());
+		}
+		else if(a.getJoinString().length() == 0 || b.getJoinString().length() == 0)
+		{
+			return a.getJoinString().toString().compareToIgnoreCase(b.getJoinString().toString());
+		}
+		else
+		{
+			int jsComp = a.getJoinString().toString().compareToIgnoreCase(b.getJoinString().toString());
+			if(jsComp == 0)
+			{
+				return a.getItem().compareToIgnoreCase(b.getItem());
+			}
+			else
+			{
+				return jsComp;
+			}
+		}
+		
+	}
+	
+	public void addItem(int itemPos)
+	{
+		this.itemsNumber  = this.itemsNumber | (int)Math.pow(2, itemPos); 
+	}
+	
 
 }

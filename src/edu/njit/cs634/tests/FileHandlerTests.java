@@ -7,26 +7,20 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import edu.njit.cs634.apriori.FileHandler;
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
 
-public class FileHandlerTests extends TestCase {
+public class FileHandlerTests {
 	
 	private FileHandler handler;
 
-	protected static void setUpBeforeClass() throws Exception {
-	}
-
-	protected static void tearDownAfterClass() throws Exception {
-	}
-
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		handler = new FileHandler("/Users/jmb66/Documents/NJIT/CS634/D1.txt");
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-
+	@Test
 	public void testReadFile()
 	{
 		LinkedList ll;

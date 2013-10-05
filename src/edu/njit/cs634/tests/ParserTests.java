@@ -4,26 +4,20 @@ import java.util.LinkedList;
 import java.util.TreeMap;
 
 import edu.njit.cs634.apriori.Parser;
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
 
-public class ParserTests extends TestCase {
+public class ParserTests{
 	
 	private Parser parser;
 
-	protected static void setUpBeforeClass() throws Exception {
-	}
-
-	protected static void tearDownAfterClass() throws Exception {
-	}
-
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		parser = new Parser();
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-	
+	@Test
 	public void testParseRow()
 	{
 		String[] s;

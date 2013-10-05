@@ -75,8 +75,11 @@ public class FileHandler{
 	 * The data from the file fills a <code>HashTable</code> with the
 	 * transaction ID as the <code>key</code> and a <code>Linked List</code> of the items as the 
 	 * <code>value</code>.
+	 * 
+	 * @return A Hashtable<String, LinkedList<String>> containing the transaction ID as the key and a linked list of the items
+	 * as the values.
 	 */
-	public void readFile()
+	public Hashtable<String, LinkedList<String>> readFile()
 	{
 		if(filePath != null)
 		{
@@ -95,6 +98,9 @@ public class FileHandler{
 					list = parser.parseItems(stringArray[1], itemDelim);
 					table.put(key, list);
 				}
+				
+				return table;
+				
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -104,6 +110,8 @@ public class FileHandler{
 			}
 			
 		}
+		
+		return null;
 	}
 	
 }
