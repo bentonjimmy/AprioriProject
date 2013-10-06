@@ -3,6 +3,7 @@ package edu.njit.cs634.tests;
 import java.util.LinkedList;
 import java.util.TreeMap;
 
+import edu.njit.cs634.apriori.ItemList;
 import edu.njit.cs634.apriori.Parser;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -34,6 +35,7 @@ public class ParserTests{
 		assertTrue("Test three occurrence table size", parser.getOccurrenceTable().isEmpty() == true);
 	}
 	
+	@Test
 	public void testParseItems()
 	{
 		LinkedList<String> s;
@@ -49,14 +51,26 @@ public class ParserTests{
 		assertTrue("Test three size check", s.size() == 1);
 		assertTrue("Test three occurrence table size", parser.getOccurrenceTable().size() == 6);
 		
-		TreeMap<String, Integer> tm = parser.getOccurrenceTable();
+		TreeMap<ItemList, Integer> tm = parser.getOccurrenceTable();
 		assertTrue("Occurrence Table size check", tm.size() == 6);
-		assertTrue("Check count: This", tm.get("This") == 2);
-		assertTrue("Check count: is", tm.get("is") == 1);
-		assertTrue("Check count: test", tm.get("test") == 1);
-		assertTrue("Check count: one", tm.get("one") == 1);
-		assertTrue("Check count: is|test|two", tm.get("is|test|two") == 1);
-		assertTrue("Check count: This|is|test|three", tm.get("This|is|test|three") == 1);
+		ItemList i1 = new ItemList();
+		i1.addItem("This");
+		assertTrue("Check count: This", tm.get(i1) == 2);
+		i1 = new ItemList();
+		i1.addItem("is");
+		assertTrue("Check count: is", tm.get(i1) == 1);
+		i1 = new ItemList();
+		i1.addItem("test");
+		assertTrue("Check count: test", tm.get(i1) == 1);
+		i1 = new ItemList();
+		i1.addItem("one");
+		assertTrue("Check count: one", tm.get(i1) == 1);
+		i1 = new ItemList();
+		i1.addItem("is|test|two");
+		assertTrue("Check count: is|test|two", tm.get(i1) == 1);
+		i1 = new ItemList();
+		i1.addItem("This|is|test|three");
+		assertTrue("Check count: This|is|test|three", tm.get(i1) == 1);
 	}
 	
 	

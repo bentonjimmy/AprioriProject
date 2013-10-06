@@ -8,14 +8,14 @@ public class Parser {
 	
 	public Parser()
 	{
-		occurrenceTable = new TreeMap<String, Integer>();
+		occurrenceTable = new TreeMap<ItemList, Integer>();
 	}
 
-	public TreeMap<String, Integer> getOccurrenceTable() {
+	public TreeMap<ItemList, Integer> getOccurrenceTable() {
 		return occurrenceTable;
 	}
 
-	public void setOccurrenceTable(TreeMap<String, Integer> occurrenceTable) {
+	public void setOccurrenceTable(TreeMap<ItemList, Integer> occurrenceTable) {
 		this.occurrenceTable = occurrenceTable;
 	}
 
@@ -43,8 +43,9 @@ public class Parser {
 		StringTokenizer st = new StringTokenizer(line, delims);
 		while(st.hasMoreElements())
 		{
-			String word = st.nextToken();
-			ll.addLast(word);
+			ItemList word = new ItemList();
+			word.addItem(st.nextToken());
+			ll.addLast(word.getItem());
 			if(count == true)
 			{
 				addWordOccurrence(word);
@@ -60,7 +61,7 @@ public class Parser {
 	 * it is found then it is incremented by 1.
 	 * @param word - the word to be added to the occurrence tracking table
 	 */
-	protected void addWordOccurrence(String word)
+	protected void addWordOccurrence(ItemList word)
 	{
 		if(occurrenceTable.get(word) == null)
 		{
@@ -76,6 +77,6 @@ public class Parser {
 		}
 	}
 	
-	private TreeMap<String, Integer> occurrenceTable;
+	private TreeMap<ItemList, Integer> occurrenceTable;
 	
 }

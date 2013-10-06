@@ -33,6 +33,7 @@ public class FileHandlerTests {
 		assertTrue("Transaction 2 Item 2", ll.get(1).equals("The Hunger Games"));
 		Set s = ht.entrySet();
 		Iterator iter = s.iterator();
+		System.out.println("Printing Transaction Table");
 		while(iter.hasNext())
 		{
 			System.out.println(iter.next());
@@ -42,6 +43,7 @@ public class FileHandlerTests {
 		TreeMap tm = handler.getParser().getOccurrenceTable();
 		s = tm.entrySet();
 		iter = s.iterator();
+		System.out.println("Printing Word Occurrence Table");
 		while(iter.hasNext())
 		{
 			System.out.println(iter.next());

@@ -19,7 +19,23 @@ public class ItemListTests {
 
 	@Test
 	public void testCompare() {
-		fail("Not yet implemented"); // TODO
+		String A = new String("A");
+		String B = new String("B");
+		item1.addItem("A");
+		item2.addItem("B");
+		assertTrue("Test A and B", item1.compareTo(item2) == -1);
+		assertTrue("Test A and B as Strings", A.compareToIgnoreCase(B) == -1);
+		item1.addItem("B");
+		item2.addItem("B");
+		assertTrue("Add two Bs", item1.compareTo(item2) == -1);
+		item1 = new ItemList();
+		item2 = new ItemList();
+		item1.addItem("C");
+		item2.addItem("C");
+		assertTrue("Add two Cs - Test equality in Item", item1.compareTo(item2) == 0);
+		item1.addItem("D");
+		item2.addItem("D");
+		assertTrue("Add two Ds - Test equality in Item and JoinString", item1.compareTo(item2) == 0);
 	}
 
 	@Test

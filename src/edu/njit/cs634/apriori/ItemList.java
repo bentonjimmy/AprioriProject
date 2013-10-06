@@ -2,7 +2,7 @@ package edu.njit.cs634.apriori;
 
 import java.util.Comparator;
 
-public class ItemList implements Comparator<ItemList>{
+public class ItemList implements Comparable<ItemList>, Cloneable{
 
 	private StringBuffer joinString;
 	private String item;
@@ -38,33 +38,43 @@ public class ItemList implements Comparator<ItemList>{
 	public void setItemsNumber(Long itemsNumber) {
 		this.itemsNumber = itemsNumber;
 	}
-
+	
 	@Override
-	public int compare(ItemList a, ItemList b) {
-		if(a.getJoinString().length() == 0 && b.getJoinString().length() == 0)
+	public Object clone()
+	{
+		ItemList theClone = new ItemList();
+		theClone.item = new String(this.item);
+		theClone.itemsNumber = this.itemsNumber;
+		theClone.joinString = new StringBuffer(this.joinString);
+		return theClone;
+	}
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		if(o instanceof ItemList)
 		{
-			return a.getItem().compareToIgnoreCase(b.getItem());
+			if(this.compareTo((ItemList)o) == 0)
+				return true;
+			else
+				return false;
 		}
-		else if(a.getJoinString().length() == 0 || b.getJoinString().length() == 0)
+		else
+			return false;
+	}
+	
+	@Override
+	public String toString()
+	{
+		if(getJoinString().length() != 0)
 		{
-			return a.getJoinString().toString().compareToIgnoreCase(b.getJoinString().toString());
+			return getJoinString() + ", " + getItem();
 		}
 		else
 		{
-			int jsComp = a.getJoinString().toString().compareToIgnoreCase(b.getJoinString().toString());
-			if(jsComp == 0)
-			{
-				return a.getItem().compareToIgnoreCase(b.getItem());
-			}
-			else
-			{
-				return jsComp;
-			}
+			return getItem();
 		}
-		
 	}
-	
-	
 	
 	public void addItem(String item, int itemPos)
 	{
@@ -93,6 +103,31 @@ public class ItemList implements Comparator<ItemList>{
 	public void addItem(int itemPos)
 	{
 		this.itemsNumber  = this.itemsNumber | (int)Math.pow(2, itemPos); 
+	}
+
+	@Override
+	public int compareTo(ItemList b) 
+	{
+		if(this.getJoinString().length() == 0 && b.getJoinString().length() == 0)
+		{
+			return this.getItem().compareToIgnoreCase(b.getItem());
+		}
+		else if(this.getJoinString().length() == 0 || b.getJoinString().length() == 0)
+		{
+			return this.getJoinString().toString().compareToIgnoreCase(b.getJoinString().toString());
+		}
+		else
+		{
+			int jsComp = this.getJoinString().toString().compareToIgnoreCase(b.getJoinString().toString());
+			if(jsComp == 0)
+			{
+				return this.getItem().compareToIgnoreCase(b.getItem());
+			}
+			else
+			{
+				return jsComp;
+			}
+		}
 	}
 	
 
