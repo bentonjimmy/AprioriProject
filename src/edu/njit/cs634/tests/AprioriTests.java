@@ -67,7 +67,7 @@ public class AprioriTests extends Apriori {
 		
 		apriori.calculateCommonSets();
 		assertTrue("Check size of occurrence table after calculateCommonSets()", apriori.getItemOccurrences().size() == 10);
-		assertTrue("Check size of commonItems table after calculateCommonSets()", apriori.getCommonItems().size() == 5);
+		assertTrue("Check size of commonItems table after calculateCommonSets()", apriori.getCommonItemsTable().size() == 5);
 		assertTrue("Check size of non-Common items table after calculateCommonSets()", apriori.getNonCommonItems().size() == 6);
 		apriori.calculateCommonSets();
 		/*
@@ -81,14 +81,14 @@ public class AprioriTests extends Apriori {
 		}
 		*/
 		assertTrue("Check size of occurrence table after calculateCommonSets() - 2nd", apriori.getItemOccurrences().size() == 1);
-		assertTrue("Check size of commonItems table after calculateCommonSets() - 2nd", apriori.getCommonItems().size() == 10);
+		assertTrue("Check size of commonItems table after calculateCommonSets() - 2nd", apriori.getCommonItemsTable().size() == 10);
 		assertTrue("Check size of non-Common items table after calculateCommonSets() - 2nd", apriori.getNonCommonItems().size() == 11);
 		
 		while(apriori.getItemOccurrences().size() > 0)
 		{
 			apriori.calculateCommonSets();
 		}
-		Set<ItemList> sCI = apriori.getCommonItems().keySet();
+		Set<ItemList> sCI = apriori.getCommonItemsTable().keySet();
 		Iterator<ItemList> iterCI = sCI.iterator();
 		System.out.println("Printing Common Itemsets");
 		while(iterCI.hasNext())
@@ -109,7 +109,7 @@ public class AprioriTests extends Apriori {
 		{
 			apriori.calculateCommonSets();
 		}
-		Set<ItemList> sCI = apriori.getCommonItems().keySet();
+		Set<ItemList> sCI = apriori.getCommonItemsTable().keySet();
 		Iterator<ItemList> iterCI = sCI.iterator();
 		System.out.println("Printing Common Itemsets");
 		while(iterCI.hasNext())
@@ -127,7 +127,7 @@ public class AprioriTests extends Apriori {
 		{
 			apriori.calculateCommonSets();
 		}
-		sCI = apriori.getCommonItems().keySet();
+		sCI = apriori.getCommonItemsTable().keySet();
 		iterCI = sCI.iterator();
 		System.out.println("Printing Common Itemsets");
 		while(iterCI.hasNext())

@@ -18,7 +18,7 @@ public class Apriori {
 		this.itemOccurrences = null;
 		this.positionMap = new Hashtable<String, Integer>();
 		this.nonCommonItems = new Hashtable<ItemList, String>();
-		this.commonItems = new TreeMap<ItemList, Integer>();
+		this.commonItemsTable = new TreeMap<ItemList, Integer>();
 		this.itemTable = null;
 	}
 	
@@ -102,18 +102,45 @@ public class Apriori {
 		this.nonCommonItems = nonCommonItems;
 	}
 
-	public TreeMap<ItemList, Integer> getCommonItems() {
-		return commonItems;
+	public TreeMap<ItemList, Integer> getCommonItemsTable() {
+		return commonItemsTable;
 	}
 
-	public void setCommonItems(TreeMap<ItemList, Integer> commonItems) {
-		this.commonItems = commonItems;
+	public void setCommonItemsTable(TreeMap<ItemList, Integer> commonItems) {
+		this.commonItemsTable = commonItems;
+	}
+	
+	public String[] getCommonItems()
+	{
+		String[] items = new String[commonItemsTable.size()];
+		int i = 0;
+		Set<ItemList> s = commonItemsTable.keySet();
+		Iterator<ItemList> iter = s.iterator();
+		while(iter.hasNext())
+		{
+			items[i] = iter.next().toString();
+			i++;
+		}
+		return items;
+	}
+	
+	public void run()
+	{
+		parseFile();
+		createPositionMap();
+		createItemSetTable();
+		while(getItemOccurrences().size() > 0)
+		{
+			calculateCommonSets();
+		}
+		
 	}
 
 	public void parseFile()
 	{
-		if(handler.getFilePath() != null)
+		if(file != null)
 		{
+			handler.setFilePath(file);
 			itemTable = handler.readFile();
 			itemOccurrences = handler.getParser().getOccurrenceTable();
 		}
@@ -235,7 +262,7 @@ public class Apriori {
 			else
 			{
 				//Make note of common sets so far
-				commonItems.put(items, i);
+				commonItemsTable.put(items, i);
 			}
 		}
 		buildNextSet(s);
@@ -303,7 +330,7 @@ public class Apriori {
 	private FileHandler handler;
 	private TreeMap<ItemList, Integer> itemOccurrences;
 	private Hashtable<ItemList, String> nonCommonItems;
-	private TreeMap<ItemList, Integer> commonItems;
+	private TreeMap<ItemList, Integer> commonItemsTable;
 	private Hashtable<String, Integer> positionMap;
 	private Hashtable<String, LinkedList<String>> itemTable;
 	private Long[][] itemSetTable;

@@ -108,24 +108,38 @@ public class ItemList implements Comparable<ItemList>, Cloneable{
 	@Override
 	public int compareTo(ItemList b) 
 	{
+		//If both joinStrings are empty
 		if(this.getJoinString().length() == 0 && b.getJoinString().length() == 0)
 		{
 			return this.getItem().compareToIgnoreCase(b.getItem());
 		}
+		//If one joinString is empty
 		else if(this.getJoinString().length() == 0 || b.getJoinString().length() == 0)
 		{
 			return this.getJoinString().toString().compareToIgnoreCase(b.getJoinString().toString());
 		}
-		else
+		//If neither joinString is empty
+		else 
 		{
-			int jsComp = this.getJoinString().toString().compareToIgnoreCase(b.getJoinString().toString());
-			if(jsComp == 0)
+			if(this.joinString.length() > b.getJoinString().length())
 			{
-				return this.getItem().compareToIgnoreCase(b.getItem());
+				return 1;
+			}
+			else if(this.joinString.length() < b.getJoinString().length())
+			{
+				return -1;
 			}
 			else
 			{
-				return jsComp;
+				int jsComp = this.getJoinString().toString().compareToIgnoreCase(b.getJoinString().toString());
+				if(jsComp == 0)
+				{
+					return this.getItem().compareToIgnoreCase(b.getItem());
+				}
+				else
+				{
+					return jsComp;
+				}
 			}
 		}
 	}
