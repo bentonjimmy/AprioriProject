@@ -190,7 +190,7 @@ public class AppUI {
 		{
 			boolean valid = true;
 			String file = (String) cBoxSetSelection.getSelectedItem();
-			String filepath = "/Users/jmb66/Documents/NJIT/CS634/" + file + ".txt";
+			String filepath = "src/" + file + ".txt";
 			try
 			{
 				apriori.setFile(filepath);
