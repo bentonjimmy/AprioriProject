@@ -7,12 +7,19 @@ public class ItemList implements Comparable<ItemList>, Cloneable{
 	private StringBuffer joinString;
 	private String item;
 	private Long itemsNumber;
+	private int size;
 	
 	public ItemList()
 	{
 		joinString = new StringBuffer();
 		item = null;
 		itemsNumber = 0L;
+		size = 0;
+	}
+	
+	public int size()
+	{
+		return size;
 	}
 	
 	public StringBuffer getJoinString() {
@@ -49,6 +56,7 @@ public class ItemList implements Comparable<ItemList>, Cloneable{
 		theClone.item = new String(this.item);
 		theClone.itemsNumber = this.itemsNumber;
 		theClone.joinString = new StringBuffer(this.joinString);
+		theClone.size = this.size;
 		return theClone;
 	}
 	
@@ -104,6 +112,7 @@ public class ItemList implements Comparable<ItemList>, Cloneable{
 			joinString.append(", " + this.item);
 			setItem(item);
 		}
+		addOne();
 	}
 	
 	public void addItem(int itemPos)
@@ -150,5 +159,9 @@ public class ItemList implements Comparable<ItemList>, Cloneable{
 		}
 	}
 	
+	private void addOne()
+	{
+		size++;
+	}
 
 }

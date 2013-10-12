@@ -27,7 +27,6 @@ public class AppUI {
 	private JFrame frame;
 	private JTextField txtSupport;
 	private JTextField txtConfidence;
-	private JTextField txtSimLength;
 	private JComboBox cBoxSetSelection;
 	private float support;
 	private Apriori apriori;
@@ -61,7 +60,7 @@ public class AppUI {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 700, 300);
+		frame.setBounds(100, 100, 700, 409);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 		
@@ -106,17 +105,6 @@ public class AppUI {
 		JPanel panel_4 = new JPanel();
 		frame.getContentPane().add(panel_4, BorderLayout.SOUTH);
 		panel_4.setLayout(new GridLayout(0, 4, 0, 0));
-		
-		JLabel fileSelection = new JLabel("File Name");
-		fileSelection.setHorizontalAlignment(SwingConstants.CENTER);
-		panel_4.add(fileSelection);
-		
-		txtSimLength = new JTextField();
-		panel_4.add(txtSimLength);
-		txtSimLength.setColumns(10);
-		
-		JPanel panel_5 = new JPanel();
-		panel_4.add(panel_5);
 		
 		JButton bttnRun = new JButton("Run");
 		panel_4.add(bttnRun);
@@ -184,6 +172,11 @@ public class AppUI {
 				valid = false;
 				tpDisplay.setText("No value for Support\n");
 			}
+			else if(txtConfidence.getText().isEmpty())
+			{
+				valid = false;
+				tpDisplay.setText("No value for Confidence\n");
+			}
 			
 			return valid;
 		}
@@ -202,6 +195,7 @@ public class AppUI {
 			{
 				apriori.setFile(filepath);
 				apriori.setSupport(Float.valueOf(txtSupport.getText()));
+				apriori.setConfidence(Float.valueOf(txtConfidence.getText()));
 			}
 			catch(Exception e)
 			{

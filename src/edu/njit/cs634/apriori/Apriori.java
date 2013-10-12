@@ -1,5 +1,6 @@
 package edu.njit.cs634.apriori;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -19,7 +20,9 @@ public class Apriori {
 		this.positionMap = new Hashtable<String, Integer>();
 		this.nonCommonItems = new Hashtable<ItemList, String>();
 		this.commonItemsTable = new TreeMap<ItemList, Integer>();
+		this.invertedPositionMap = new Hashtable<Long, ItemList>();
 		this.itemTable = null;
+		this.rules = new ArrayList<String>();
 	}
 	
 	public float getSupport() {
@@ -112,6 +115,8 @@ public class Apriori {
 	
 	public String[] getCommonItems()
 	{
+		return rules.toArray(new String[0]);
+		/*
 		String[] items = new String[commonItemsTable.size()];
 		int i = 0;
 		Set<ItemList> s = commonItemsTable.keySet();
@@ -122,8 +127,13 @@ public class Apriori {
 			i++;
 		}
 		return items;
+		*/
 	}
 	
+	/**
+	 * This method will create the association rules based off of the given database.  The
+	 * method will run until the item set it no longer able to create new lists of items.
+	 */
 	public void run()
 	{
 		parseFile();
@@ -133,7 +143,7 @@ public class Apriori {
 		{
 			calculateCommonSets();
 		}
-		
+		calculateConfidence();
 	}
 
 	public void parseFile()
@@ -155,7 +165,8 @@ public class Apriori {
 			Iterator<ItemList> iter = s.iterator();
 			while(iter.hasNext())
 			{
-				positionMap.put(iter.next().getItem(), Integer.valueOf(i));
+				ItemList temp = iter.next();
+				positionMap.put(temp.getItem(), Integer.valueOf(i));
 				i++;
 			}
 		}
@@ -265,6 +276,7 @@ public class Apriori {
 			{
 				//Make note of common sets so far
 				commonItemsTable.put(items, i);
+				invertedPositionMap.put(items.getItemsNumber(), items);
 			}
 		}
 		buildNextSet(s);
@@ -325,6 +337,51 @@ public class Apriori {
 		setSize++;
 	}
 	
+	public void calculateConfidence()
+	{
+		Set<ItemList> s = commonItemsTable.keySet();
+		Iterator<ItemList> iterNum = s.iterator();
+		while(iterNum.hasNext())
+		{
+			ItemList numeratorList = iterNum.next();
+			if(numeratorList.size() > 1)
+			{
+				//get the numerator - support_count(A U B)
+				int numerator = commonItemsTable.get(numeratorList);
+				//Calculate denominators - support_count(A)
+				Set<ItemList> s2 = commonItemsTable.keySet();
+				Iterator<ItemList> iterDen = s2.iterator();
+				ItemList denomList;
+				/*
+				 * This loop will iterator over all the Common Item sets or until the size of the denominator
+				 * set is larger than the numerator set (support_count(A) cannot be smaller than support_count(A U B)).
+				 */
+				while(iterDen.hasNext() && (denomList = iterDen.next()).size() < numeratorList.size())
+				{
+					/*
+					 * The below if statement checks to see that the denomList items are in the numeratorList items.  The 
+					 * bitwise AND is used to check that the denomList items are in the numeratorList items.
+					 * If they are in the numeratorList items then we will use the denomList support count to calculate 
+					 * the confidence.
+					 */
+					if((numeratorList.getItemsNumber() & denomList.getItemsNumber()) == denomList.getItemsNumber())
+					{
+						int denominator = commonItemsTable.get(denomList);
+						if(((float)numerator/(float)denominator) >= confidence)
+						{
+							long bLookup = numeratorList.getItemsNumber() ^ denomList.getItemsNumber();
+							String B = invertedPositionMap.get(bLookup).toString();
+							String A = denomList.toString();
+							rules.add((new Rules(A, B, 
+									Math.round(((float)numerator/(float)itemTable.size()) * 100.0), 
+									Math.round(((float)numerator/(float)denominator) * 100.0)).toString()));
+						}
+					}
+				}
+			}
+		}
+	}
+	
 	private float support, confidence;
 	private int setSize;
 	private String file;
@@ -333,6 +390,8 @@ public class Apriori {
 	private Hashtable<ItemList, String> nonCommonItems;
 	private TreeMap<ItemList, Integer> commonItemsTable;
 	private Hashtable<String, Integer> positionMap;
+	private Hashtable<Long, ItemList> invertedPositionMap;
 	private Hashtable<String, LinkedList<String>> itemTable;
 	private Long[][] itemSetTable;
+	private ArrayList<String> rules;
 }
