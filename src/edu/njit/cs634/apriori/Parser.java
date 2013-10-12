@@ -1,9 +1,15 @@
 package edu.njit.cs634.apriori;
 
+
 import java.util.LinkedList;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 
+/**
+ * This class is used to parse the transactions in the given file/database.
+ * @author Jim Benton
+ *
+ */
 public class Parser {
 	
 	public Parser()
@@ -19,11 +25,23 @@ public class Parser {
 		this.occurrenceTable = occurrenceTable;
 	}
 
+	/**
+	 * Used to parse a line of data.  This is used to parse the transaction ID from the items.
+	 * @param line - the String to be parsed
+	 * @param delims - the delimiter to parse the data
+	 * @return a String array of the parsed line
+	 */
 	public String[] parseRow(String line, String delims)
 	{
 		return parse(line, delims, false).toArray(new String[0]);
 	}
 	
+	/**
+	 * Used to parse a line of data. This will parse the items in the transaction.
+	 * @param line - the items that will be parsed
+	 * @param delims - the delimiter to parse the data
+	 * @return a Linked List containing the items in the transaction
+	 */
 	public LinkedList<String> parseItems(String line, String delims)
 	{
 		return parse(line, delims, true);
@@ -45,6 +63,7 @@ public class Parser {
 		{
 			ItemList word = new ItemList();
 			word.addItem(st.nextToken());
+			//Adds the item to a Linked List that will contain all the items in a transaction
 			ll.addLast(word.getItem());
 			if(count == true)
 			{

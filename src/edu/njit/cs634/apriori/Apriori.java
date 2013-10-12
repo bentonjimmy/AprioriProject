@@ -113,21 +113,13 @@ public class Apriori {
 		this.commonItemsTable = commonItems;
 	}
 	
+	/**
+	 * Returns a String array containing the formatted association rules.
+	 * @return String[] - String array containing the association rules
+	 */
 	public String[] getCommonItems()
 	{
 		return rules.toArray(new String[0]);
-		/*
-		String[] items = new String[commonItemsTable.size()];
-		int i = 0;
-		Set<ItemList> s = commonItemsTable.keySet();
-		Iterator<ItemList> iter = s.iterator();
-		while(iter.hasNext())
-		{
-			items[i] = iter.next().toString();
-			i++;
-		}
-		return items;
-		*/
 	}
 	
 	/**
@@ -146,7 +138,11 @@ public class Apriori {
 		calculateConfidence();
 	}
 
-	public void parseFile()
+	/**
+	 * This method will parse the given input file/database as well as
+	 * get the number of occurrences for the initial items.
+	 */
+	protected void parseFile()
 	{
 		if(file != null)
 		{
@@ -156,13 +152,21 @@ public class Apriori {
 		}
 	}
 
-	public void createPositionMap()
+	/**
+	 * This will create the position map.  The position map is used to convert an item in the 
+	 * database to a number based off of it's position alphabetically in the list of all the items.
+	 * The position map is used in order to create the ItemList ItemNumbers.
+	 */
+	protected void createPositionMap()
 	{
 		if(itemOccurrences != null)
 		{
 			int i = 0;
 			Set<ItemList> s = itemOccurrences.keySet();
 			Iterator<ItemList> iter = s.iterator();
+			/*
+			 * Iterate through all items in order to get their alphabetic position
+			 */
 			while(iter.hasNext())
 			{
 				ItemList temp = iter.next();
@@ -172,7 +176,12 @@ public class Apriori {
 		}
 	}
 	
-	public void createItemSetTable()
+	/**
+	 * This creates a numerical representation of the transactions in the database.  It is essentially
+	 * creating a binary string with either a 1 or a 0 representing if the value is in the transaction 
+	 * or not.
+	 */
+	protected void createItemSetTable()
 	{
 		int width = 1;
 		itemSetTable = new Long[itemTable.size()][width];
@@ -186,37 +195,61 @@ public class Apriori {
 		}
 	}
 	
+	/**
+	 * Given a Transaction ID (key), this will return a numerical representation of the transaction
+	 * using the positionMap. 
+	 * @param key - the transaction that will be translated to a numerical value
+	 * @return a long representing the items in the transaction
+	 */
 	protected Long getItemNumbers(String key)
 	{
 		long items = 0;
+		//retrieves the transaction
 		LinkedList<String> ll = itemTable.get(key);
 		Iterator<String> iter = ll.iterator();
 		while(iter.hasNext())
 		{
 			String s = iter.next();
+			//gets the position of the item
 			Integer position = positionMap.get(s);
+			//adds the numerical value of the item
 			items = addItem(items, position.intValue());
 		}
 		
 		return items;
 	}
 	
+	/**
+	 * This method will add a given item to the number string that represents the items in a transaction.
+	 * The item is added to the number through a bitwise OR computation.
+	 * @param items - the number that will get itemNum added to it
+	 * @param itemNum - the numerical position of the item that will be added to items
+	 * @return a long that represents the items in a transaction
+	 */
 	protected long addItem(long items, int itemNum)
 	{
 		int power = itemNum;
 		return items | (long)Math.pow(2, power);
 	}
 	
+	/*
+	 * For testing purposes only
+	 * 
 	public long addItemTest(long items, int itemNum)
 	{
 		return addItem(items, itemNum);
 	}
+	*/
 	
-	public void calculateCommonSets()
+	/**
+	 * This method calculates the common item sets.  
+	 */
+	protected void calculateCommonSets()
 	{
 		/*
 		 * If the setSize is 1 then it's the first time through the item sets.  This means
-		 * we have already calculated the number of occurrences for the items.
+		 * we have already calculated the number of occurrences for the items since this is
+		 * done when the file is first parsed.
 		 */
 		if(setSize == 1) 
 		{
@@ -233,27 +266,35 @@ public class Apriori {
 				//Check tempIL against each item in itemSetTable
 				for(int i=0; i<itemTable.size(); i++)
 				{
-					//Bitwise AND used to check if the items in tempIL are in the transaction in itemSetTable
-					if((tempIL.getItemsNumber() & itemSetTable[i][0]) == tempIL.getItemsNumber()) //Should be changed
+					/*
+					 * Bitwise AND used to check if the items in tempIL are in the transaction in itemSetTable.
+					 * If the items in tempIL are found in a transaction then the occurrence of tempIL is incremented
+					 * by one
+					 */
+					if((tempIL.getItemsNumber() & itemSetTable[i][0]) == tempIL.getItemsNumber()) 
 					{
+						//get the number of occurrences of tempIL
 						Integer io = itemOccurrences.get(tempIL);
 						itemOccurrences.put(tempIL, io + 1);
 					}
 				}
 			}
-			//Check which items are above support, etc.
-			//Create new item sets
+
 			removeUnderThreshold();
 			
 		}
 	}
 	
+	/**
+	 * This method will remove anything under the given threshold
+	 */
 	protected void removeUnderThreshold()
 	{
 		ItemList items;
 		Set<ItemList> s = itemOccurrences.keySet();
 		Iterator<ItemList> iter = s.iterator();
 		
+		//Iterator through the items to check their occurrences
 		while(iter.hasNext())
 		{
 			items = iter.next();
@@ -276,12 +317,17 @@ public class Apriori {
 			{
 				//Make note of common sets so far
 				commonItemsTable.put(items, i);
+				//the invertedPositionMap is used to get items based off of their numerical representation
 				invertedPositionMap.put(items.getItemsNumber(), items);
 			}
 		}
 		buildNextSet(s);
 	}
 	
+	/**
+	 * This will build the next set of item sets that need to be tested against the transaction.
+	 * @param s - the Set of items that will be iterated over to create new item sets
+	 */
 	protected void buildNextSet(Set<ItemList> s)
 	{
 		TreeMap<ItemList, Integer> tempTM = new TreeMap<ItemList, Integer>();
@@ -306,6 +352,10 @@ public class Apriori {
 					ItemList tempIL = (ItemList) keys[i].clone();
 					tempIL.addItem(new String(keys[j].getItem()), posj);
 					
+					/*
+					 * The below portion only needs to be done for item sets over oen item
+					 * since when they are a single item they would have been removed earlier 
+					 */
 					if(setSize > 1)
 					{
 						//Check if it's a nonCommon set
@@ -334,17 +384,25 @@ public class Apriori {
 			}
 		}
 		itemOccurrences = tempTM; //these will be the next values to be tested as being common item sets
-		setSize++;
+		setSize++; //increases the value of set sizes that are expected
 	}
 	
-	public void calculateConfidence()
+	/**
+	 * Calculates the confidence and creates the association rules
+	 */
+	protected void calculateConfidence()
 	{
+		//Iterator over the item set we have found to be common
 		Set<ItemList> s = commonItemsTable.keySet();
 		Iterator<ItemList> iterNum = s.iterator();
 		while(iterNum.hasNext())
 		{
+			/*
+			 * Each item we iterate over will be used for the numerator
+			 * portion when calculating the confidence
+			 */
 			ItemList numeratorList = iterNum.next();
-			if(numeratorList.size() > 1)
+			if(numeratorList.size() > 1)//A single item will not create an association rule
 			{
 				//get the numerator - support_count(A U B)
 				int numerator = commonItemsTable.get(numeratorList);
@@ -367,11 +425,18 @@ public class Apriori {
 					if((numeratorList.getItemsNumber() & denomList.getItemsNumber()) == denomList.getItemsNumber())
 					{
 						int denominator = commonItemsTable.get(denomList);
-						if(((float)numerator/(float)denominator) >= confidence)
+						if(((float)numerator/(float)denominator) >= confidence) //If greater than the given confidence create a rule
 						{
+							/*
+							 * The below computation uses the bitwise XOR to calculate the B portion of A => B
+							 * Once we have the numerical representation of B we can use the invertedPositionMap to look
+							 * up the item that is represented by those digits.
+							 */
 							long bLookup = numeratorList.getItemsNumber() ^ denomList.getItemsNumber();
 							String B = invertedPositionMap.get(bLookup).toString();
+						
 							String A = denomList.toString();
+							//Create the Rule
 							rules.add((new Rules(A, B, 
 									Math.round(((float)numerator/(float)itemTable.size()) * 100.0), 
 									Math.round(((float)numerator/(float)denominator) * 100.0)).toString()));
@@ -386,12 +451,12 @@ public class Apriori {
 	private int setSize;
 	private String file;
 	private FileHandler handler;
-	private TreeMap<ItemList, Integer> itemOccurrences;
-	private Hashtable<ItemList, String> nonCommonItems;
-	private TreeMap<ItemList, Integer> commonItemsTable;
-	private Hashtable<String, Integer> positionMap;
-	private Hashtable<Long, ItemList> invertedPositionMap;
-	private Hashtable<String, LinkedList<String>> itemTable;
-	private Long[][] itemSetTable;
-	private ArrayList<String> rules;
+	private TreeMap<ItemList, Integer> itemOccurrences; //Holds the # of occurrences of an item
+	private Hashtable<ItemList, String> nonCommonItems; //Holds the non-Common item sets
+	private TreeMap<ItemList, Integer> commonItemsTable; //Holds the Common item sets
+	private Hashtable<String, Integer> positionMap; //Holds the integer value of the items in the transactions
+	private Hashtable<Long, ItemList> invertedPositionMap; //Holds the items that represent an integer value
+	private Hashtable<String, LinkedList<String>> itemTable; //Holds the Transaction ID and a list of the items in a transaction
+	private Long[][] itemSetTable; //Holds the numerical representation of itemTable
+	private ArrayList<String> rules; //Holds the association rules that have been created
 }

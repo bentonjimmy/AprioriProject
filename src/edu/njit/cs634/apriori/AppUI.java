@@ -145,16 +145,12 @@ public class AppUI {
 						try {
 							doc.insertString(doc.getLength(), items[i] + "\n", null);
 						} catch (BadLocationException e1) {
-							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
 					}
 				}
 				
 			}
-			
-			//Set Support and Data set
-			//Run
 		}
 		
 		/**

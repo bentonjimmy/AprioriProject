@@ -7,6 +7,12 @@ import java.io.IOException;
 import java.util.Hashtable;
 import java.util.LinkedList;
 
+/**
+ * This class will handle the parsing of the given file.  By default the delimiter between
+ * Transaction ID and the items is a tab and the delimiter between items is a pipe (|).
+ * @author Jim Benton
+ *
+ */
 public class FileHandler{
 
 	private String filePath;
@@ -91,10 +97,13 @@ public class FileHandler{
 				LinkedList<String> list;
 				String[] stringArray;
 				br = new BufferedReader(new FileReader(filePath));
+				//Loop while there is data to read
 				while((line = br.readLine()) != null)
 				{
+					//Parses the transaction ID from the items in it
 					stringArray = parser.parseRow(line, rowDelim);
 					key = stringArray[0];
+					//Parses the items in the transactions
 					list = parser.parseItems(stringArray[1], itemDelim);
 					table.put(key, list);
 				}

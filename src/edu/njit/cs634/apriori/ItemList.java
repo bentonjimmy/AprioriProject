@@ -2,6 +2,11 @@ package edu.njit.cs634.apriori;
 
 import java.util.Comparator;
 
+/**
+ * This class represents the list of items
+ * @author Jim Benton
+ *
+ */
 public class ItemList implements Comparable<ItemList>, Cloneable{
 
 	private StringBuffer joinString;
@@ -78,6 +83,9 @@ public class ItemList implements Comparable<ItemList>, Cloneable{
 	}
 	
 	@Override
+	/**
+	 * Returns a String representation of the items in the ItemList
+	 */
 	public String toString()
 	{
 		if(getJoinString().length() != 0)
@@ -90,24 +98,33 @@ public class ItemList implements Comparable<ItemList>, Cloneable{
 		}
 	}
 	
+	/**
+	 * Add an item to the itemList
+	 * @param item - the String representation of the item to be added to the ItemList
+	 * @param itemPos - the numerical representation of the item to be added to the ItemList
+	 */
 	public void addItem(String item, int itemPos)
 	{
 		addItem(item);
 		addItem(itemPos);
 	}
 	
+	/**
+	 * Adds the item to the ItemList
+	 * @param item - the String representation of the item to be added to the ItemList
+	 */
 	public void addItem(String item)
 	{
 		if(this.item == null) //No item in this object yet
 		{
 			setItem(item);
 		}
-		else if(this.item != null && joinString.length() == 0)
+		else if(this.item != null && joinString.length() == 0)//There is 1 item in the list
 		{
 			joinString.append(this.item);
 			setItem(item);
 		}
-		else //There is already one item
+		else //There are several items in the list
 		{
 			joinString.append(", " + this.item);
 			setItem(item);
@@ -115,12 +132,19 @@ public class ItemList implements Comparable<ItemList>, Cloneable{
 		addOne();
 	}
 	
+	/**
+	 * Adds the item to the ItemList based off of its numerical representation
+	 * @param itemPos - the numerical representation of the item to be added to the ItemList
+	 */
 	public void addItem(int itemPos)
 	{
 		this.itemsNumber  = this.itemsNumber | (int)Math.pow(2, itemPos); 
 	}
 
 	@Override
+	/**
+	 * This is used to compare two itemLists
+	 */
 	public int compareTo(ItemList b) 
 	{
 		//If both joinStrings are empty
@@ -159,6 +183,10 @@ public class ItemList implements Comparable<ItemList>, Cloneable{
 		}
 	}
 	
+	/**
+	 * Tracks the size of the itemList.  This is incremented when a String item is added
+	 * to the object.
+	 */
 	private void addOne()
 	{
 		size++;
