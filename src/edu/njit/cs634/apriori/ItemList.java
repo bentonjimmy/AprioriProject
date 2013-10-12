@@ -40,6 +40,9 @@ public class ItemList implements Comparable<ItemList>, Cloneable{
 	}
 	
 	@Override
+	/**
+	 * Creates a copy of the ItemList.
+	 */
 	public Object clone()
 	{
 		ItemList theClone = new ItemList();
@@ -50,6 +53,9 @@ public class ItemList implements Comparable<ItemList>, Cloneable{
 	}
 	
 	@Override
+	/**
+	 * Tests the equality of two ItemLists.
+	 */
 	public boolean equals(Object o)
 	{
 		if(o instanceof ItemList)

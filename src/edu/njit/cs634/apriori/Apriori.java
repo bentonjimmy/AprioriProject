@@ -242,6 +242,7 @@ public class Apriori {
 		ItemList items;
 		Set<ItemList> s = itemOccurrences.keySet();
 		Iterator<ItemList> iter = s.iterator();
+		
 		while(iter.hasNext())
 		{
 			items = iter.next();
@@ -252,11 +253,12 @@ public class Apriori {
 			int itemPosition = positionMap.get(items.getItem());
 			items.addItem(itemPosition);
 			Integer i = itemOccurrences.get(items);
-			if(i.intValue() < support) //This may need to be changed
+			float threshold = ((float)i.intValue())/((float)itemTable.size());
+			
+			if(threshold < support) 
 			{
 				//Remove anything under support
 				nonCommonItems.put(items, "No");
-				//itemOccurrences.remove(items);
 				iter.remove();
 			}
 			else
@@ -288,7 +290,6 @@ public class Apriori {
 				if(keys[i].getJoinString().toString().equals(keys[j].getJoinString().toString()))
 				{
 					int posj = positionMap.get(keys[j].getItem());
-					int posi = positionMap.get(keys[i].getItem());
 					//Make temp copy of items that will be joined
 					ItemList tempIL = (ItemList) keys[i].clone();
 					tempIL.addItem(new String(keys[j].getItem()), posj);
